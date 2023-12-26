@@ -1,2 +1,2 @@
 # templater
-Template engine based on html/template lib
+Template engine based on text/template lib
