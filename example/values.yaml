@@ -1,0 +1,7 @@
+appName: test
+
+envs:
+  - staging
+  - production
+
+awsRegion: us-east-1
