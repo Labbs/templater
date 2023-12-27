@@ -109,22 +109,6 @@ func Render(app *bootstrap.Application) error {
 						}
 					}
 				}
-
-				// // Créez le fichier de sortie
-				// outputFile, err := os.Create(outputFilePath)
-				// if err != nil {
-				// 	app.Logger.Error().Err(err).Str("output_file", outputFilePath).Msg("failed to create output file")
-				// 	return err
-				// }
-				// defer outputFile.Close()
-
-				// // Effectuez le rendu dans le fichier de sortie
-				// app.Logger.Info().Str("output_file", outputFilePath).Msg("rendering template file")
-				// err = tmpl.Execute(outputFile, data)
-				// if err != nil {
-				// 	app.Logger.Error().Err(err).Str("output_file", outputFilePath).Msg("failed to execute template")
-				// 	return err
-				// }
 			}
 		}
 		return nil
