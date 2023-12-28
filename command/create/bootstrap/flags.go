@@ -7,7 +7,7 @@ import (
 
 func Flags() []cli.Flag {
 	return []cli.Flag{
-		&cli.StringFlag{
+		&cli.StringSliceFlag{
 			Name:        "values",
 			Aliases:     []string{"v"},
 			Usage:       "values file",
