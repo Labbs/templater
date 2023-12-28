@@ -28,10 +28,12 @@ func (r Run) Run() error {
 		}
 	}
 
-	// Check if values file exists
-	if _, err := os.Stat(r.Config.ValuesFile); os.IsNotExist(err) {
-		r.Logger.Error().Err(err).Str("value_file", r.Config.ValuesFile).Msg("values file does not exist")
-		return err
+	// Check if values files exists
+	for _, valueFile := range r.Config.ValuesFile.Value() {
+		if _, err := os.Stat(valueFile); os.IsNotExist(err) {
+			r.Logger.Error().Err(err).Str("value_file", valueFile).Msg("values file does not exist")
+			return err
+		}
 	}
 
 	// Check if template files folder exists
@@ -40,18 +42,26 @@ func (r Run) Run() error {
 		return err
 	}
 
-	r.Logger.Info().Str("value_file", r.Config.ValuesFile).Msg("rendering values file")
-	yFile, err := os.ReadFile(r.Config.ValuesFile)
-	if err != nil {
-		r.Logger.Error().Err(err).Msg("failed to read values file")
-		return err
-	}
+	values := make(map[interface{}]interface{})
 
-	data := make(map[interface{}]interface{})
-	err = yaml.Unmarshal(yFile, &data)
-	if err != nil {
-		r.Logger.Error().Err(err).Str("value_file", r.Config.ValuesFile).Msg("failed to unmarshal values file")
-		return err
+	for _, valueFile := range r.Config.ValuesFile.Value() {
+		r.Logger.Info().Str("value_file", valueFile).Msg("rendering values file")
+		yFile, err := os.ReadFile(valueFile)
+		if err != nil {
+			r.Logger.Error().Err(err).Msg("failed to read values file")
+			return err
+		}
+
+		data := make(map[interface{}]interface{})
+		err = yaml.Unmarshal(yFile, &data)
+		if err != nil {
+			r.Logger.Error().Err(err).Str("value_file", valueFile).Msg("failed to unmarshal values file")
+			return err
+		}
+
+		for k, v := range data {
+			values[k] = v
+		}
 	}
 
 	r.Logger.Info().Str("template_path", r.Config.TemplateFiles).Msg("parsing template files")
@@ -86,7 +96,7 @@ func (r Run) Run() error {
 				// Render the template file in memory
 				r.Logger.Info().Str("output_file", outputFilePath).Msg("rendering template file")
 				var renderedTemplate bytes.Buffer
-				err = tmpl.Execute(&renderedTemplate, data)
+				err = tmpl.Execute(&renderedTemplate, values)
 				if err != nil {
 					r.Logger.Error().Err(err).Str("output_file", outputFilePath).Msg("failed to execute template")
 					return err
