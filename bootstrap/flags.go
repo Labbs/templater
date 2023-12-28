@@ -20,23 +20,5 @@ func Flags() []cli.Flag {
 			Value:       true,
 			Destination: &config.AppConfig.PrettyLogs,
 		},
-		&cli.StringFlag{
-			Name:        "values",
-			Aliases:     []string{"v"},
-			Usage:       "values file",
-			Destination: &config.AppConfig.ValuesFile,
-		},
-		&cli.StringFlag{
-			Name:        "template",
-			Aliases:     []string{"t"},
-			Usage:       "template file",
-			Destination: &config.AppConfig.TemplateFiles,
-		},
-		&cli.StringFlag{
-			Name:        "output",
-			Aliases:     []string{"o"},
-			Usage:       "output file",
-			Destination: &config.AppConfig.OutputFiles,
-		},
 	}
 }

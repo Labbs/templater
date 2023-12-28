@@ -7,7 +7,10 @@ import (
 
 	"github.com/labbs/templater/bootstrap"
 	"github.com/labbs/templater/config"
-	"github.com/labbs/templater/render"
+
+	createBootstrap "github.com/labbs/templater/command/create/bootstrap"
+
+	// "github.com/labbs/templater/render"
 	"github.com/urfave/cli/v2"
 )
 
@@ -16,26 +19,24 @@ import (
 var version = "development"
 
 func main() {
-	flags := bootstrap.Flags()
+	app := cli.NewApp()
+
+	app.Name = "Templater"
+	app.Usage = "A template engine"
+
+	app.Version = version
 	appConfig := &config.AppConfig
 	appConfig.Version = version
 
-	app := cli.NewApp()
-	app.Name = "Templater"
-	app.Version = version
-
-	app.Commands = []*cli.Command{
-		{
-			Name:  "render",
-			Usage: "render a template",
-			Flags: flags,
-			Action: func(c *cli.Context) error {
-				appBootstrap := bootstrap.App(appConfig)
-
-				return render.Render(appBootstrap)
-			},
-		},
+	app.Flags = bootstrap.Flags()
+	app.Before = func(c *cli.Context) error {
+		c.App.Metadata["logger"] = bootstrap.InitLogger(*appConfig)
+		return nil
 	}
+
+	app.Commands = []*cli.Command{}
+
+	app.Commands = append(app.Commands, createBootstrap.Command())
 
 	err := app.Run(os.Args)
 	if err != nil {
