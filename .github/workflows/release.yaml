@@ -35,7 +35,7 @@ jobs:
         prefix: 'v'
 
     - name: Build app
-      run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-X 'main.version=${{ steps.version.outputs.full }}'" -o bin/${{ env.APP_NAME }} .
+      run: CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-X 'main.version=${{ steps.version.outputs.full }}'" -o bin/${{ env.APP_NAME }} cmd/main.go
     
     - name: Generate MD5
       run: md5sum bin/${{ env.APP_NAME }} > bin/${{ env.APP_NAME }}.md5
