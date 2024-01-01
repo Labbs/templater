@@ -4,7 +4,7 @@ go 1.21.5
 
 require (
 	github.com/rs/zerolog v1.31.0
-	github.com/urfave/cli/v2 v2.26.0
+	github.com/urfave/cli/v2 v2.27.1
 	gopkg.in/yaml.v3 v3.0.1
 )
 
